@@ -84,6 +84,7 @@ class HidingAlgorithm(object):
             self.rovio.rotate_left(speed=0.5)  # turn 20 degree right
             # time.sleep(0.5)
             print (123)
+            print (456)
         return distance_obstacles, angle_obstacles, angle_rovio
 
     def find_blind_spot(self, distance_obstacles, angle_obstacles, angle_rovio):
