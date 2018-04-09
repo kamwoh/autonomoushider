@@ -73,15 +73,14 @@ Updated by Tristan Hearn (2013), tristanhearn@gmail.com
 """
 
 import base64
-import urllib2
 import logging
+import urllib2
 
 ###############
 # MODULE INFO #
 ###############
 
 # Some third-party software expects __version__
-import requests
 
 __version__ = '0.2'
 API_VERSION = '1.2'
@@ -1080,14 +1079,6 @@ class RovioApi:
         r = self._get_request_response(page)
         return self._parse_response(r)['responses']
 
-    def manual_drive_v2(self, command, speed):
-        import requests
-        page = self._base_url + 'rev.cgi?Cmd=nav&action=18&drive=6&speed=5'
-        requests.get(page)
-        # r = self._get_request_response(page)
-
-        # return self._parse_response(r)['responses']
-
     def set_ir(self, ir):
         """
         This undocumented command sets the state if the IR.
@@ -1196,58 +1187,3 @@ class RovioApi:
             page = 'rev.cgi?Cmd=nav&action=%d&name=%s' % (commandID, name)
         r = self._get_request_response(page)
         return self._parse_response(r)['responses']
-
-
-class RovioApiV2(object):
-    def __init__(self, host):
-        self.url = 'http://%s/' % host
-
-    def rotate_right(self, speed=None):
-        return self.rotate(speed, 1)
-
-    def rotate_left(self, speed=None):
-        return self.rotate(speed, -1)
-
-    def rotate(self, speed, direction):
-        if direction > 0:
-            drive = 6
-        else:
-            drive = 5
-
-        if speed is None:
-            speed = 5
-
-        page = 'rev.cgi?Cmd=nav&action=18&drive=%s&speed=%s' % (drive, speed)
-        api = self.url + page
-        r = requests.get(api)
-        return r
-
-    def custom_rotate_left(self, speed, angle):
-        page = 'rev.cgi?Cmd=nav&action=18&drive=18&speed=%s&angle=%s' % (speed, angle)
-        api = self.url + page
-        r = requests.get(api)
-        return r
-
-    def rotate_360(self):
-        page = 'rev.cgi?Cmd=nav&action=18&drive=18&speed=0.3&angle=31'
-        api = self.url + page
-        r = requests.get(api)
-        return r
-
-    def stop(self):
-        page = 'rev.cgi?Cmd=nav&action=18&drive=0&speed=1'
-        api = self.url + page
-        r = requests.get(api)
-        return r
-
-    def move_left(self):
-        pass
-
-    def move_right(self):
-        pass
-
-    def move_forward(self):
-        pass
-
-    def move_backward(self):
-        pass

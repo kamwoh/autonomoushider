@@ -62,7 +62,7 @@ class Rovio:
       - head_middle (camera)
     """
 
-    def __init__(self, host, username=None, password=None, port=80):
+    def __init__(self, host):
         """
         Initialize a new Rovio interface.
 
@@ -72,12 +72,12 @@ class Rovio:
           - password: HTTP Auth password (default None)
           - port:     HTTP port (default 80)
         """
-        self.api = rovio_api.RovioApi(host=host, port=port,
-                                      username=username, password=password)
+        self.api = rovio_api.RovioApi(host=host)
         self.state = 0
 
-        url = "http://%s:%s/Jpeg/CamImg0000.jpg" % (host, port)
-        self.camera = IPCamera(url, user=username, password=password)
+        # url = "http://%s:%s/Jpeg/CamImg0000.jpg" % (host, port)
+        url = 'http://%s/GetData.cgi?8935' % host
+        self.camera = IPCamera(url)
         # Drive Functions
 
     def stop(self):
@@ -164,7 +164,7 @@ class Rovio:
     def degrees2angle(self, degrees):
         """Convert degress into rovio units"""
         full_circle = 10 * math.pi
-        return degrees * full_circle / 360
+        return int(degrees * full_circle / 360)
 
     def turn_around(self, speed=None):
         """ Turn the rovio 180 degress.  """

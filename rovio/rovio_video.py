@@ -1,14 +1,15 @@
 import cv2
-import numpy as np
-import requests
+
 
 class IPCamera(object):
     def __init__(self, url):
         self.url = url
 
+    def _get_frame_iterator(self):
+        self.cap = cv2.VideoCapture(self.url)
+        while True:
+            yield self.cap.read()
+
     def get_frame(self):
-        response = requests.get(self.url)
-        print response
-        img_array = np.asarray(bytearray(response.content), dtype=np.uint8)
-        frame = cv2.imdecode(img_array, 1)
-        return frame
+        ret, frame = self._get_frame_iterator().next()
+        return ret, frame
