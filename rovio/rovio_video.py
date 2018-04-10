@@ -1,27 +1,41 @@
+import threading
+
 import cv2
-import requests
 import numpy as np
-import urllib
+import requests
 
 
 class IPCamera(object):
-    def __init__(self, url):
+    def __init__(self, url, debug=True):
         self.url = url
-        self._frame_iter = self._get_frame_iterator()
+        self.current_frame = None
+        self.debug = debug
+        self.thread = threading.Thread(target=self._get_frame, verbose=1)
+        self.thread.setDaemon(True)
+        self.thread.start()
 
-    def _get_frame_iterator(self):
-        stream = urllib.urlopen(self.url)
-        bytes = ''
+    def _get_frame(self):
+        r = requests.get(self.url, stream=True)
+        _iter = r.iter_content(chunk_size=1024)
+        _bytes = bytes()
         while True:
-            bytes += stream.read(1024)
-            a = bytes.find('\xff\xd8')
-            b = bytes.find('\xff\xd9')
-            if a != -1 and b != -1:
-                jpg = bytes[a:b + 2]
-                bytes = bytes[b + 2:]
-                frame = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), 1)
-                yield frame
+            try:
+                chunk = _iter.next()
+                _bytes += chunk
+                a = _bytes.find(b'\xff\xd8')
+                b = _bytes.find(b'\xff\xd9')
+                if a != -1 and b != -1:
+                    jpg = _bytes[a:b + 2]
+                    _bytes = _bytes[b + 2:]
+                    i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+                    self.current_frame = i
+                    if self.debug:
+                        cv2.imshow('debug', self.current_frame)
+                        cv2.waitKey(1)
+            except Exception as e:
+                print ('gg error: ' + str(e.message))
 
     def get_frame(self):
-        ret, frame = True, self._frame_iter.next()
+        ret = True
+        frame = self.current_frame.copy() if self.current_frame is not None else None
         return ret, frame
