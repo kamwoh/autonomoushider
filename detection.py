@@ -1,4 +1,3 @@
-import math
 import os
 
 import cv2
@@ -303,7 +302,7 @@ class ObstacleDetection(object):
         if (len(cont) != 0):
             for i in range(len(cont)):
                 area = cv2.contourArea(cont[i])
-                if (area > 8000):
+                if (area > 8000):  # why 8000? why if less than 8000?
                     cv2.drawContours(frame, cont[i], contourIdx=-1, color=(255, 0, 0), thickness=2, maxLevel=1)
                     x, y, w, h = cv2.boundingRect(cont[i])
 
@@ -333,7 +332,12 @@ class ObstacleDetection(object):
                     cv2.putText(f, ('(' + str(rfx) + ',' + str(rfy) + ')'), (rfx - 40, rfy + 30),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.4, (0, 0, 0), 1, True)
 
-                d.append({'Area': area, 'Refer_point': [rfx, rfy], 'Bottom_corner1': btc1, 'Bottom_corner2': btc2})
+                    d.append({'Area': area, 'Refer_point': [rfx, rfy], 'Bottom_corner1': btc1, 'Bottom_corner2': btc2})
+
+                # d.append({'Area': area, 'Refer_point': [rfx, rfy], 'Bottom_corner1': btc1, 'Bottom_corner2': btc2})
+                # return d
+
+            if len(d) != 0:  # is it correct? if no area more than 8000, return No Obstacle Found
                 return d
-        else:
-            return 'No Obstacle Found'
+
+        return 'No Obstacle Found'
