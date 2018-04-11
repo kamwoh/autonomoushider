@@ -909,8 +909,6 @@ class SSDBoxEncoder:
         '''
 
         # 1: Generate the template for y_encoded
-        print 'ground fuck truth length cb', len(ground_truth_labels)
-        print
         y_encode_template = self.generate_encode_template(batch_size=len(ground_truth_labels), diagnostics=False)
         y_encoded = np.copy(y_encode_template) # We'll write the ground truth box data to this array
 
