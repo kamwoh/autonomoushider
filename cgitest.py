@@ -1,6 +1,6 @@
 import cv2
 
-from rovio.rovio_video import IPCamera
+from .rovio.rovio_video import IPCamera
 
 camera = IPCamera('http://192.168.43.18/GetData.cgi?8935')
 

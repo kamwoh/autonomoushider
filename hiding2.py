@@ -13,7 +13,7 @@ import math
 import time
 
 import detection
-from rovio import rovio
+from .rovio import rovio
 
 
 class HidingAlgorithm(object):

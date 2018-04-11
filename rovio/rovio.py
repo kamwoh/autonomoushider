@@ -13,8 +13,8 @@ Updated by Tristan Hearn (2013), tristanhearn@gmail.com
 import math
 import time
 
-import rovio_api
-from rovio_video import IPCamera
+from . import rovio_api
+from .rovio_video import IPCamera
 
 
 class Rovio:

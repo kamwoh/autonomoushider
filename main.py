@@ -1,5 +1,5 @@
 import detection
-from hiding2 import HidingAlgorithm
+from .hiding2 import HidingAlgorithm
 # from rovio.rovio_video import IPCamera
 
 
