@@ -74,13 +74,15 @@ Updated by Tristan Hearn (2013), tristanhearn@gmail.com
 
 import base64
 import logging
-import urllib2
+
+# import urllib2
 
 ###############
 # MODULE INFO #
 ###############
 
 # Some third-party software expects __version__
+import requests
 
 __version__ = '0.2'
 API_VERSION = '1.2'
@@ -1120,12 +1122,14 @@ class RovioApi:
 
         """
         url = self._base_url + page
-        req = urllib2.Request(url)
-        req.add_header('User-Agent', USER_AGENT)
-        if self._base64string is not None:
-            req.add_header("Authorization", "Basic %s" % self._base64string)
-        f = urllib2.urlopen(req)
-        data = f.read()
+        r = requests.get(url)
+        # req = urllib2.Request(url)
+        # req.add_header('User-Agent', USER_AGENT)
+        # if self._base64string is not None:
+        #     req.add_header("Authorization", "Basic %s" % self._base64string)
+        # f = urllib2.urlopen(req)
+        # data = f.read()
+        data = r.content
         return data
 
     def _parse_response(self, response):

@@ -1,8 +1,8 @@
+import requests
 import threading
 
 import cv2
 import numpy as np
-import requests
 
 
 class IPCamera(object):
@@ -10,7 +10,7 @@ class IPCamera(object):
         self.url = url
         self.current_frame = None
         self.debug = debug
-        self.thread = threading.Thread(target=self._get_frame, verbose=1)
+        self.thread = threading.Thread(target=self._get_frame)
         self.thread.setDaemon(True)
         self.thread.start()
 
