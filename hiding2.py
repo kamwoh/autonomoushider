@@ -22,7 +22,7 @@ class HidingAlgorithm(object):
         self.obstacle_detection = detection.ObstacleDetection()
         self.screen_width = 640
         self.screen_height = 480
-        self.center_bound = 20
+        self.center_bound = 20     #30 % X OF VIDEO AS ERROR 
         self.center = [self.screen_width / 2, self.screen_height / 2]
         self.delay_time = 0.5  # delay time for 20degree with 0.5 speed (fine tune this)
         self.rovio = rovio.Rovio(host)
