@@ -1,5 +1,5 @@
 import detection
-from .hiding2 import HidingAlgorithm
+from hiding2 import HidingAlgorithm
 # from rovio.rovio_video import IPCamera
 
 
@@ -11,7 +11,7 @@ def main():
 def testvideo():
     import cv2
     model, classes = detection.init_model('./ssdweights/rovio_v2.h5')
-    cap = cv2.VideoCapture('robotics2_obstacle.mp4')
+    cap = cv2.VideoCapture('robotics1.mp4')
     while cap.isOpened():
         ret, frame = cap.read()
         if ret:

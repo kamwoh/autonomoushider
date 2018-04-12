@@ -121,7 +121,7 @@ def predict(model, img, classes, confidence_threshold):
     orig_images = []  # Store the images here.
     input_images = []  # Store resized versions of the images here.
 
-    img = cv2.imread(img)[:, :, ::-1] if isinstance(img, basestring) else img
+    img = cv2.imread(img)[:, :, ::-1] if isinstance(img, str) else img
 
     orig_images.append(img.copy())  # expect a cv2 rgb img
     if img.shape[:2] != (img_height, img_width):

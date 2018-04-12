@@ -1129,7 +1129,7 @@ class RovioApi:
         #     req.add_header("Authorization", "Basic %s" % self._base64string)
         # f = urllib2.urlopen(req)
         # data = f.read()
-        data = r.content
+        data = r.text
         return data
 
     def _parse_response(self, response):

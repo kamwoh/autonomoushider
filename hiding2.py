@@ -8,12 +8,12 @@
 # reverse away (50cm) from the seeker with seeker as the refer point
 # move "direction" until obstacle blocks seeker, seeker as refer point
 # hidding done
-
+import cv2
 import math
 import time
 
 import detection
-from .rovio import rovio
+from rovio import rovio
 
 
 class HidingAlgorithm(object):
@@ -22,7 +22,7 @@ class HidingAlgorithm(object):
         self.obstacle_detection = detection.ObstacleDetection()
         self.screen_width = 640
         self.screen_height = 480
-        self.center_bound = 20     #30 % X OF VIDEO AS ERROR 
+        self.center_bound = 100   #50~100
         self.center = [self.screen_width / 2, self.screen_height / 2]
         self.delay_time = 0.5  # delay time for 20degree with 0.5 speed (fine tune this)
         self.rovio = rovio.Rovio(host)
@@ -46,9 +46,12 @@ class HidingAlgorithm(object):
         print ('obstacle')
         self.obstacle_points = self.obstacle_detection.get_refer_point(self.frame)
         print ('done')
-        # cv2.imshow('show', self.frame)
+        if self.frame is not None:
+            cv2.imshow('obstacle', self.frame)
+        if self.rovio_detection.disp_img is not None:
+            cv2.imshow('rovio', self.rovio_detection.disp_img)
         print ('after show')
-        # cv2.waitKey(1)
+        cv2.waitKey(1)
 
         print (self.rovio_point)
         print (self.obstacle_points)
@@ -59,10 +62,10 @@ class HidingAlgorithm(object):
 
         angle_rovio = -1
         max_seeker = None
-        turn_angle = 20
-        for x in range(1, 19):
+        turn_angle = 36
+        for x in range(10):
             self.get_frame()
-            print ('Current angle:', x * 20)
+            print ('Current angle:', x * turn_angle)
 
             points = self.obstacle_points
 
@@ -76,15 +79,17 @@ class HidingAlgorithm(object):
 
             seeker_point = self.rovio_point  # EXPERIMENT HOW MANY ROVIO ANGLE TO REGISTER
 
+            bxs_rovio = -1, -1
+
             if seeker_point != 'No Rovio Found':
                 if max_seeker is None or seeker_point['Area'] > max_seeker['Area']:
                     max_seeker = seeker_point
                     angle_rovio = x * turn_angle
                     bxs_rovio = self.get_bxs('rovio')
 
-            self.rovio.rotate_right(speed=0.5, angle=20)  # turn 20 degree right
-            print ('Turning 20 degree to the right')
-            time.sleep(self.delay_time)  # EXPERIEMNT !!!!! FOR EVERY 20 DEGREE WITH 0.5 SPEED, NEED 0.5 SEC TO TURN
+            self.rovio.rotate_right(speed=4)  # turn 36 degree right
+            print ('Turning 36 degree to the right')
+            time.sleep(self.delay_time)  # EXPERIEMNT !!!!! FOR EVERY 36 DEGREE WITH 4 SPEED, NEED 0.5 SEC TO TURN
             print (
                 'Finished turning')  # IF PRINT FINISH TURNING BEFORE REAL LIFE ROVIO FINISHED TURNING, ALL MORE SLEEP TIME
             # DO THE FINE TURN OF THE WAIT TIME HERE
@@ -123,7 +128,8 @@ class HidingAlgorithm(object):
         return blind_spot, diff_angle
 
     def check_center(self, bounding_box_x1, bounding_box_x2):
-        return self.screen_width - bounding_box_x2 - self.center_bound < bounding_box_x1 < self.screen_width - bounding_box_x2 + self.center_bound
+        #return self.screen_width - bounding_box_x2 - self.center_bound < bounding_box_x1 < self.screen_width - bounding_box_x2 + self.center_bound
+        return self.get_refer_point('rovio') != 'No Rovio Found'
 
     def look_check_center(self, bx1, bx2, obj):
         i = 100
@@ -131,9 +137,15 @@ class HidingAlgorithm(object):
             print (i, 'running check center')
             self.get_frame()
             bx1, bx2 = self.get_bxs(obj)
+            if bx1 <= 5 and bx2 >= self.screen_width-6:
+                print ('------------------ OBJECT IS TOO CLOSE, ASSUMIGN IT IT AT THE CENTER OF SCREEN')
+                break
             i -= 1
+            if i == 0 and not (self.check_center(bx1, bx2)):
+                print('>>>>>>>>>>>>>>>>>>>>>>>>>>> Exiting program ... ERROR: rovio not found after 360')
+                exit()
 
-        print ('Stopping rovio, since obj is found at the center of screen')
+        print ('--------------- Stopping rovio, since obj is found at the center of screen')
         self.rovio.stop()
         return bx1, bx2
 
@@ -163,19 +175,26 @@ class HidingAlgorithm(object):
 
         return bx1, bx2
 
-    def turn2face_rovio(self, angle_rovio=None, bxs=None):
-        if angle_rovio != None:
+    def turn2face_rovio(self, angle_rovio=None, bxs=None, turn_direction=None):
+        turn_direction = 0
+        bx1, bx2 = -1, -1
+        if angle_rovio is not None and turn_direction == 0:
             bx1, bx2 = self.get_bxs('rovio')
             # turn to face the previously recognized rovio
             if 40 < angle_rovio < 180:
                 # assume less than 40 degree dift after detecting surrounding
-                self.rovio.rotate_right(speed=0.2, angle=360)
+                self.rovio.rotate_right(speed=0.5, angle=360)
+                turn_direction = 1
             else:
-                self.rovio.rotate_left(speed=0.2, angle=360)
+                self.rovio.rotate_left(speed=0.5, angle=360)
+                turn_direction = -1
         else:
-            print ('finding any rovio by turning 360')
-            self.rovio.rotate_right(speed=0.2, angle=360)
+            if turn_direction == -1:
+                self.rovio.rotate_right(speed=0.5, angle=360)
+            else:
+                self.rovio.rotate_left(speed=0.5, angle=360)
         bx1_compare, bx2_compare = self.look_check_center(bx1, bx2, 'rovio')
+        return turn_direction
         print('Done turning to face rovio')
         print('bx1_found:', bx1_compare)
         print('bx2_found:', bx2_compare)
@@ -193,18 +212,18 @@ class HidingAlgorithm(object):
         if diff_angle_abs > 20 or diff_angle_abs < 160:
             if diff_angle > 0:
                 turn_direction = 1
-                self.rovio.rotate_right_lag(tm=self.delay_time * diff_angle_abs / 20, speed=0.5, angle=diff_angle_abs)
+                self.rovio.rotate_right_lag(tm=self.delay_time * diff_angle_abs / 36, speed=0.5, angle=diff_angle_abs)
             else:
                 turn_direction = -1
-                self.rovio.rotate_left_lag(tm=self.delay_time * diff_angle_abs / 20, speed=0.5, angle=diff_angle_abs)
+                self.rovio.rotate_left_lag(tm=self.delay_time * diff_angle_abs / 36, speed=0.5, angle=diff_angle_abs)
         else:
             if diff_angle > 0:
                 turn_direction = -1
-                self.rovio.rotate_left_lag(tm=self.delay_time * diff_angle_abs / 20, speed=0.5,
+                self.rovio.rotate_left_lag(tm=self.delay_time * diff_angle_abs / 36, speed=0.5,
                                            angle=360 - diff_angle_abs)
             else:
                 turn_direction = 1
-                self.rovio.rotate_right_lag(tm=self.delay_time * diff_angle_abs / 20, speed=0.5,
+                self.rovio.rotate_right_lag(tm=self.delay_time * diff_angle_abs / 36, speed=0.5,
                                             angle=360 - diff_angle_abs)
 
         print('Correcting the angle after drifting error ... ')
@@ -220,10 +239,18 @@ class HidingAlgorithm(object):
     def get_refer_point(self, obj):
         if obj == 'obstacle':
             list1 = self.obstacle_points
+            if list1 == str:
+                print ('......................... REFER POINT LOST ........................')
+                exit()
             ind_closest = self.get_closest_ob(list1)
             return list1[ind_closest]['Refer_point']
+
         else:
             list1 = self.rovio_point
+            if list1 == 'No Rovio Found':
+                return list1
+                #print('......................... REFER POINT LOST ........................')
+                #exit()
             return list1['Refer_point']
 
     def move_forward(self, nearest_distance, obj):
@@ -267,18 +294,21 @@ class HidingAlgorithm(object):
         return refer_point[0] - self.center[0]
 
     def tune2face(self, forward_dis, screen_dis):
-        turn_degree = math.asin(abs(screen_dis) / forward_dis) - 3
+        print ('---------------------Starting tune 2 face')
+        turn_degree = math.degrees(math.asin(abs(screen_dis) / forward_dis))
+        print ('----- tune degree', turn_degree)
         # - 3 as error degree
         if screen_dis > 10:  # refer_point at right side of screen
             # while screen_dis > 0:
             # rovio turn right 5 degree self.rovio.api.manual_drive(6, 0.3, 5)
             # alternatie method: turn right math.asin(screen_dis/forward_dis) - 3 error degree   EXPERIMENT TURN SCREEN ANGLE = REAL LIFE ANGLE
-            self.rovio.rotate_right_lag(tm=self.delay_time * turn_degree / 20, speed=0.5, angle=turn_degree)
+            self.rovio.rotate_right_lag(tm=self.delay_time * turn_degree / 36, speed=4, angle=turn_degree)
         elif screen_dis < -10:
             # while screen_dis < 0:
             # rovio turn left 5 degree self.rovio.api.manual_drive(5, 0.3, 5)
             # alternatie method: turn left math.asin(screen_dis/forward_dis) - 3 error degree	EXPERIMENT TURN SCREEN ANGLE = REAL LIFE ANGLE
-            self.rovio.rotate_left_lag(tm=self.delay_time * turn_degree / 20, speed=0.5, angle=turn_degree)
+            self.rovio.rotate_left_lag(tm=self.delay_time * turn_degree / 36, speed=4, angle=turn_degree)
+        print ('----------------------tune 2 face ended')    
 
     def hide_behind(self, move_str_direction):
         self.get_frame()
@@ -310,14 +340,16 @@ class HidingAlgorithm(object):
 
         print ('STEP 1: Detecting surrounding ... ')
         distance_obstacles, angle_obstacles, angle_rovio, bxs_rovio = self.detection_surrounding()
-        print ('-- Finished STEP 1')
         # find the nearest obstacle
         # find the blind spot of the robot of that obstacle (at left or right side) (-1 or 1 direction)
-        print ('-- Calculating blind spot ... ')
+        print ('------------------------- Calculating blind spot ... ')
         blind_spot, diff_angle = self.find_blind_spot(distance_obstacles, angle_obstacles, angle_rovio)
-        print ('-- Blind_spot:', blind_spot)
-        print ('-- Angle diff btw closest rovio to closest obs:', diff_angle)
-
+        print ('-------------------------- Blind_spot:', blind_spot)
+        print ('angle rovio:', angle_rovio)
+        print ('angle obstacle:', angle_obstacles)
+        print ('---------------------------Angle diff btw closest rovio to closest obs:', diff_angle)
+        print ('------------------------- Finished STEP 1')
+        #exit()
         if blind_spot != -1 and blind_spot != 1:
             # if blind_spot == 2:
             # 	#turn 30 degree right, move forward until seeker is not seen
@@ -334,16 +366,28 @@ class HidingAlgorithm(object):
             # 		while True:
             # 			print ("no seeker, no obstacle, case 1 starts")
             # 			self.rovio.api.manual_drive(18, 0.3,angle_nearest_obstalce)
-            pass
+            print ('------------------------------------ BLIND SPOT != 1 OR -1 ----------------------------------')
+            exit()
         else:
             try:
                 print ('STEP 2: Turning to face rovio ...')
-                self.turn2face_rovio(angle_rovio, bxs_rovio)  # MIGHT FACING THE WRONG ROVIO
+                turned = self.turn2face_rovio(angle_rovio, bxs_rovio)  # MIGHT FACING THE WRONG ROVIO
+                print ('------------------- STOP TURNING')
+                print ('------------------------THERE SHOULD BE A ROVIO IN THE SCREEN, TO BE TUNED LATER')
+                time.sleep(0.5)
+                #print ('------------- tuning by turning')
+                #self.turn2face_rovio(turned)
+                #time.sleep(0.5)
+                print ('------------------- START TUNING 2 FACE ROVIO')
+                self.tune2face(self.forward_dis(self.get_refer_point('rovio')),self.screen_dis(self.get_refer_point('rovio')))
                 print ('-- Finished STEP 2, now hider is facing rovio')
+                exit()
 
                 print ('STEP 3: Turning to face obstacle ...')
                 self.turn2face_ob_from_rovio(diff_angle)  # ERROR CAUSE BY DIRFTING
                 print ('-- Finished STEP 3, now hider is facing obstacle it will use to hide')
+                exit()
+
 
                 nearest_distance = 25  # to be determined
                 print ('nearest distance:', nearest_distance)
@@ -364,6 +408,7 @@ class HidingAlgorithm(object):
                 print ('STEP 7: Hiding behind the obstacle ... ')
                 self.hide_behind(blind_spot)
                 print ('-- Finished STEP 7, hiding is done')
-            except:
+            except Exception as e:
                 print ('Error liaoooooooo')
+                print (e)
                 raise

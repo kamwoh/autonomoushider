@@ -20,8 +20,6 @@ django-hitcounter==0.1.1
 entrypoints==0.2.3
 enum34==1.1.6
 funcsigs==1.0.2
-functools32==3.2.3.post2
-futures==3.2.0
 gast==0.2.0
 google==2.0.1
 google-api-python-client==1.6.5
@@ -89,9 +87,6 @@ simplegeneric==0.8.1
 singledispatch==3.4.0.3
 six==1.11.0
 sklearn==0.0
-subprocess32==3.2.7
-tensorboard==1.6.0
-tensorflow-gpu==1.6.0
 termcolor==1.1.0
 terminado==0.8.1
 testpath==0.3.1

@@ -20,7 +20,7 @@ class IPCamera(object):
         _bytes = bytes()
         while True:
             try:
-                chunk = _iter.next()
+                chunk = next(_iter)
                 _bytes += chunk
                 a = _bytes.find(b'\xff\xd8')
                 b = _bytes.find(b'\xff\xd9')
@@ -33,7 +33,7 @@ class IPCamera(object):
                         cv2.imshow('debug', self.current_frame)
                         cv2.waitKey(1)
             except Exception as e:
-                print ('gg error: ' + str(e.message))
+                print ('gg error: ' + str(e))
 
     def get_frame(self):
         ret = True
