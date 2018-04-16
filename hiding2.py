@@ -451,12 +451,12 @@ class HidingAlgorithm(object):
             if move_str_direction == 1:
                 print('>>>>>>>>>>>>>right')
                 for x in range(1):
-                    self.rovio.right(1)  # rovio move backward one step
+                    self.rovio.right(1)  
                 time.sleep(0.5)
             else:
                 print('>>>>>>>>>>>>>left')
                 for x in range(1):
-                    self.rovio.left(1)  # rovio move backward one step
+                    self.rovio.left(1)  
                 time.sleep(0.5)
 
             self.get_frame()
@@ -466,13 +466,13 @@ class HidingAlgorithm(object):
         print('>>>>>>> Hide the other half of the body by going ? steps to the ')
 
         if move_str_direction == 1:
-            print('>>>>>>>>>>>>>right')
             for x in range(2):
+                print('>>>>>>>>>>>>>right')
                 self.rovio.right(1)  # rovio move backward one step
             time.sleep(0.5)
         else:
-            print('>>>>>>>>>>>>>left')
             for x in range(2):
+                print('>>>>>>>>>>>>>left')
                 self.rovio.right(1)  # rovio move backward one step
             time.sleep(0.5)
 
@@ -515,7 +515,7 @@ class HidingAlgorithm(object):
                 turned = self.turn2face_rovio(angle_rovio, bxs_rovio)  # MIGHT FACING THE WRONG ROVIO
                 print ('------------------- STOP TURNING')
                 print ('------------------------THERE SHOULD BE A ROVIO IN THE SCREEN, TO BE TUNED LATER')
-                time.sleep(0.5)
+                #time.sleep(0.5)
                 
                 print ('------------------- START TUNING 2 FACE ROVIO')
                 self.get_frame()
@@ -527,7 +527,7 @@ class HidingAlgorithm(object):
                     self.tune2face(self.forward_dis(rpr), self.screen_dis(rpr))
                 print ('-- Finished STEP 2, now hider is facing rovio')
                 print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                time.sleep(1)
+                #time.sleep(1)
                 #exit()
 
                 print ('STEP 3: Turning to face obstacle ...')
@@ -542,7 +542,7 @@ class HidingAlgorithm(object):
                     self.tune2face(self.forward_dis(rpo), self.screen_dis(rpo))
                 print ('-- Finished STEP 3, now hider is facing obstacle it will use to hide')
                 print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                time.sleep(1)
+                #time.sleep(1)
                 #exit()
                 
                 nearest_distance = self.screen_height - 340  # when object is at Y=340 where base of screen = 480
@@ -552,14 +552,14 @@ class HidingAlgorithm(object):
                 self.move_forward(nearest_distance, "obstacle")
                 print ('-- Finished STEP 4, now hider is infront of the obstacle')
                 print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                time.sleep(1)
+                #time.sleep(1)
                 #exit()
 
                 print ('STEP 5: Turn to face the seeker ... ')
                 self.turn2face_rovio_from_ob(turn_direction=-blind_spot)
                 print ('-- Finished STEP 5, now hider is facing seeker')
                 print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                time.sleep(1)
+                #time.sleep(1)
                 #exit()
 
                 backward_distance = 35  #If final distance - original distance < than this, cont
@@ -572,14 +572,14 @@ class HidingAlgorithm(object):
                 self.move_backward(backward_distance, 'rovio')
                 print ('-- Finished STEP 6, now hider is away from the seeker')
                 print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                time.sleep(1)
+                #time.sleep(1)
                 #exit()
 
                 print ('STEP 7: Hiding behind the obstacle ... ')
                 self.hide_behind(blind_spot)
                 print ('-- Finished STEP 7, hiding is done')
                 print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-                time.sleep(1)
+                #time.sleep(1)
                 exit()
             except Exception as e:
                 print ('Error liaooooooo00000000000000o')
