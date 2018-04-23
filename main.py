@@ -11,13 +11,13 @@ def main():
 def testvideo():
     import cv2
     model, classes = detection.init_model('./ssdweights/rovio_v2.h5')
-    cap = cv2.VideoCapture('robotics1.mp4')
+    cap = cv2.VideoCapture('robotics2_obstacle.mp4')
     while cap.isOpened():
         ret, frame = cap.read()
         if ret:
             bboxes, disp_image = detection.predict(model, frame[:, :, ::-1], classes, 0.5)
             cv2.imshow('disp_image', disp_image)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            if cv2.waitKey(0) & 0xFF == ord('q'):
                 break
         else:
             break

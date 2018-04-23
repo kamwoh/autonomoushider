@@ -1,0 +1,371 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"backwar",
+				"backward_distance"
+			],
+			[
+				"turn2face",
+				"turn2face_ob_from_rovio"
+			],
+			[
+				"nearest",
+				"nearest_distance"
+			],
+			[
+				"bxs",
+				"bxs_rovio"
+			],
+			[
+				"distance_",
+				"distance_obstacle"
+			],
+			[
+				"distance",
+				"distance_obstacles"
+			],
+			[
+				"angle",
+				"angle_nearest_obstacle"
+			],
+			[
+				"angle_",
+				"angle_obstacles"
+			],
+			[
+				"refer_p",
+				"refer_point_seeker"
+			],
+			[
+				"screen",
+				"screen_dis"
+			],
+			[
+				"forwar",
+				"forward_dis"
+			],
+			[
+				"refer_point",
+				"refer_point_seeker"
+			],
+			[
+				"forw",
+				"forward_dis"
+			],
+			[
+				"blind",
+				"blind_spot"
+			],
+			[
+				"dista",
+				"distance_obstacles"
+			],
+			[
+				"compute",
+				"computeA5"
+			],
+			[
+				"jot",
+				"jotArr"
+			],
+			[
+				"i",
+				"i"
+			],
+			[
+				"test",
+				"testArr"
+			],
+			[
+				"to",
+				"toString"
+			],
+			[
+				"tes",
+				"testArr"
+			],
+			[
+				"avai",
+				"avaiBox"
+			],
+			[
+				"checkve",
+				"checkVerti2X"
+			],
+			[
+				"num",
+				"numX"
+			],
+			[
+				"add",
+				"addMoveBot"
+			],
+			[
+				"turn",
+				"turn_notice"
+			],
+			[
+				"pla",
+				"playerTurn"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"ge",
+				"getElementById"
+			],
+			[
+				"h",
+				"head\tTag"
+			],
+			[
+				"p",
+				"p1"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 490.0,
+		"last_filter": "Package Control: i",
+		"selected_items":
+		[
+			[
+				"Package Control: i",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 565.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos_tag.txt",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/info.txt",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_VERB.txt",
+		"/C/Users/kenti/Documents/autonomoushider/hiding2.py",
+		"/C/Users/kenti/Dropbox/tsukimi link.txt",
+		"/C/Users/kenti/Documents/autonomoushider/rovio/rovio_video.py",
+		"/C/Users/kenti/Documents/autonomoushider/main.py",
+		"/C/Users/kenti/Dropbox/UM studies/-------Numerial Method/TF-IDC.txt",
+		"/C/Users/kenti/Documents/autonomoushider/cgitest.py",
+		"/C/Users/kenti/Dropbox/New Text Document (2).txt",
+		"/C/Users/kenti/Documents/autonomoushider/detection.py",
+		"/C/Users/kenti/Documents/autonomoushider/requirements.txt",
+		"/C/Users/kenti/Documents/autonomoushider/rovio/rovio.py",
+		"/C/Users/kenti/Documents/autonomoushider/rovio/rovio_api.py",
+		"/C/Users/kenti/Documents/autonomoushider/ssd_box_utils/ssd_box_encode_decode_utils.py",
+		"/C/Users/kenti/Dropbox/UM studies/-------Robotics/python codes/hiding2.py",
+		"/C/Users/kenti/Downloads/objectdetection.py",
+		"/C/Users/kenti/Downloads/autonomous.py",
+		"/D/6 Project Submissions/B_Predator/adhoc setup ZHhost.txt",
+		"/C/Users/kenti/Dropbox/UM studies/-------Functional Logic Programming/python notes.py",
+		"/D/6 Project Submissions/D_NarrowSpaceExplorer/Robot Intelligence Project Group D/GROUP D - Assignment (Autonomous Navigation with Speed Change)/GROUP D - Assignment (Autonomous Navigation with Speed Change)/Speed.py",
+		"/C/Users/kenti/Dropbox/UM studies/-------Robotics/python codes/hiding.py",
+		"/D/6 Project Submissions/B_Predator/Robotic Project Predator/Code/lib/rovio_api.py",
+		"/D/6 Project Submissions/B_Predator/Robotic Project Predator/Code/lib/rovio_video.py",
+		"/D/6 Project Submissions/B_Predator/Robotic Project Predator/Code/lib/__init__.py",
+		"/D/6 Project Submissions/D_NarrowSpaceExplorer/Robot Intelligence Project Group D/GROUP D - Assignment (Autonomous Navigation with Speed Change)/GROUP D - Assignment (Autonomous Navigation with Speed Change)/RR_COM_API_MYROVIO.py",
+		"/D/6 Project Submissions/D_NarrowSpaceExplorer/Robot Intelligence Project Group D/GROUP D - Assignment (Autonomous Navigation with Speed Change)/GROUP D - Assignment (Autonomous Navigation with Speed Change)/RR_API.py",
+		"/C/Users/kenti/Dropbox/UM studies/-------20152016 sem2/WIA 1002 Data Structure/Lab answer/LiewJenWai_WEA150006_L6/src/liewjenwai_wea150006_l6/MyLinkedList.java",
+		"/D/6 Project Submissions/C_Symbol Grounding(Color)/WAES3102 - Fundamentals of Robot Intelligence Rovio-Symbol Grounding(Color)/PyRovio symbol Grounding (Color) full Code/lib/rovio.py",
+		"/D/6 Project Submissions/C_Symbol Grounding(Color)/WAES3102 - Fundamentals of Robot Intelligence Rovio-Symbol Grounding(Color)/PyRovio symbol Grounding (Color) full Code/PyRovio-Automatic_Navigation-master updates/lib/rovio_api.py",
+		"/C/Users/kenti/Downloads/Takeout/Tasks/Tasks.json",
+		"/C/Users/kenti/Downloads/Takeout/Contacts/Starred in Android/Starred in Android.vcf",
+		"/C/Users/kenti/Downloads/Takeout/Chrome/Autofill.json",
+		"/C/Users/kenti/Downloads/Takeout/Chrome/BrowserHistory.json",
+		"/C/Users/kenti/Downloads/Takeout/Google Photos/2018-03-17/IMG_20180317_151158.jpg.json",
+		"/C/Users/kenti/Downloads/Takeout/Google Photos/2016-01-03/[SUBPIG][Damasareta Taisyou 2015].mp4.json",
+		"/C/Users/kenti/Downloads/Takeout/Profile/Jw Shuai.json",
+		"/C/Users/kenti/Dropbox/末世孤雄web版（1-60）/44【安身之处】-",
+		"/C/Users/kenti/Dropbox/UM studies/-------Robotics/python codes/hiding codes.py",
+		"/C/Users/kenti/Dropbox/UM studies/-------Functional Logic Programming/lect 7.py",
+		"/C/Users/kenti/Dropbox/UM studies/-------Functional Logic Programming/tuto4.py",
+		"/C/Users/kenti/Desktop/readme.txt",
+		"/D/BaiduYunDownload/1.txt",
+		"/C/Users/kenti/Dropbox/UM studies/-------20152016 sem2/WIA 1002 Data Structure/Lab answer/LiewJenWai_WEA150006_L6/src/liewjenwai_wea150006_l6/TestLinkedList.java",
+		"/E/readme.txt",
+		"/D/the raven.txt",
+		"/C/Users/kenti/Downloads/Tf-IDF.py",
+		"/C/Users/kenti/Downloads/TF-IDC.txt",
+		"/D/test.txt",
+		"/C/Users/kenti/Desktop/the raven.txt",
+		"/D/tuto4.py",
+		"/C/Users/kenti/Downloads/en",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_PRT.txt",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_DET.txt",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_NOUN.txt",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_CONJ.txt",
+		"/D/Lexi.csv",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_PRON.txt",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_ADV.txt",
+		"/C/Users/kenti/Documents/NetBeansProjects/cc/pos/pos_ADP.txt",
+		"/C/Users/kenti/Downloads/assignment1/q4_sentiment.py",
+		"/C/Users/kenti/Desktop/pos/pos_NOUN.txt",
+		"/C/Users/kenti/Desktop/pos/pos_VERB.txt",
+		"/C/Users/kenti/Desktop/pos/pos_NUM.txt",
+		"/C/Users/kenti/Desktop/web dev exe/js/tictactoeBOT.js",
+		"/C/Users/kenti/Desktop/web dev exe/tttBOT.html",
+		"/C/Users/kenti/Desktop/web dev exe/js/tictactoe.js",
+		"/C/Users/kenti/Desktop/web dev exe/ttt.html",
+		"/C/Users/kenti/Desktop/web dev exe/index.html",
+		"/C/Users/kenti/Desktop/main.css",
+		"/C/Users/kenti/Desktop/web dev exe/to do list.html",
+		"/C/Users/kenti/Desktop/tgt/tttBOT.html",
+		"/C/Users/kenti/Documents/test/index.html",
+		"/C/Users/kenti/Documents/test/README.md",
+		"/C/Users/kenti/Desktop/web dev exe/tictactoe.js"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 35.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "hiding2.sublime-project",
+	"replace":
+	{
+		"height": 65.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 246.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

@@ -314,7 +314,7 @@ class HidingAlgorithm(object):
         #ASSUMING THERE IS ONLY ONE ROVIO
         self.get_frame()
         if not (self.check_center(-1, -1, 'rovio')):
-            for x in range(1, 10):
+            for x in range(1, 11):
                 if turn_direction == 1:
                     self.rovio.rotate_right(speed=4)
                     time.sleep(self.delay_time + 1)
@@ -357,7 +357,7 @@ class HidingAlgorithm(object):
             self.tune2face(forward_dis, screen_dis)
             for x in range(5):
                 self.rovio.forward(1)  # rovio move forward one step
-                #time.sleep(0.1)
+                time.sleep(0.1)
             time.sleep(0.5)
             self.get_frame()
             refer_point = self.get_refer_point(obj)  # EXPERIMENT UPDATE REFER POINT WHILE MOVING
@@ -388,8 +388,9 @@ class HidingAlgorithm(object):
             self.tune2face(forward_dis, screen_dis)
             for x in range(5):
                 self.rovio.backward(1)  # rovio move backward one step
+                time.sleep(0.1)
             time.sleep(0.5)
-            steps+=1
+            steps += 1
             self.get_frame()
             refer_point = self.get_refer_point(obj)  # EXPERIMENT UPDATE REFER POINT WHILE MOVING
             forward_dis = self.forward_dis(refer_point)
@@ -468,15 +469,15 @@ class HidingAlgorithm(object):
         if move_str_direction == 1:
             for x in range(2):
                 print('>>>>>>>>>>>>>right')
-                self.rovio.right(1)  # rovio move backward one step
-            time.sleep(0.5)
+                self.rovio.right(1)
+                time.sleep(0.25)
         else:
             for x in range(2):
                 print('>>>>>>>>>>>>>left')
-                self.rovio.right(1)  # rovio move backward one step
-            time.sleep(0.5)
+                self.rovio.right(1)
+                time.sleep(0.25)
 
-    def loop(self):
+    def loop2(self):
 
         print ('STEP 1: Detecting surrounding ... ')
         distance_obstacles, angle_obstacles, angle_rovio, bxs_rovio = self.detection_surrounding()
@@ -586,10 +587,119 @@ class HidingAlgorithm(object):
                 print (e)
                 raise
 
-    def loop2(self):
-        print ('STEP 7: Hiding behind the obstacle ... ')
-        self.hide_behind(1)
-        print ('-- Finished STEP 7, hiding is done')
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-        time.sleep(5)
-        exit()
+    def turn2face_rovio2(self, turn_dir):
+        # ASSUMING THERE IS ONLY ONE ROVIO
+        rovio_angle = -1
+        self.get_frame()
+        if not (self.check_center(-1, -1, 'rovio')):
+            for x in range(1, 11):
+                if turn_dir == 1:
+                    self.rovio.rotate_right(speed=4)
+                else:
+                    self.rovio.rotate_left(speed=4)
+                time.sleep(self.delay_time * 2)
+                self.get_frame()
+
+                if self.check_center(-1, -1, 'rovio'):
+                    rovio_angle = x * 36
+                    break
+        else:
+            return 0
+
+        return rovio_angle
+
+    def tune2face2(self, obj):
+        print('---------------------Starting tune 2 face')
+        self.get_frame()
+        rpo = self.get_refer_point(obj)
+        forward_dis = self.forward_dis(rpo)
+        screen_dis = self.screen_dis(rpo)
+        print('forward_dis:', forward_dis)
+        print('screen_dis:', screen_dis)
+        turn_degree = math.degrees(math.asin(abs(screen_dis) / forward_dis))
+        print('----- tune degree', turn_degree)
+        act_turn_degree = turn_degree * 0.3
+        print('------ actual tune degree', act_turn_degree)
+        if act_turn_degree > 10:
+            if screen_dis > 10:
+                print('tuning right ... ')
+                self.rovio.rotate_right_lag(tm=self.delay_time * turn_degree / 36, speed=0.2, angle=act_turn_degree)
+            elif screen_dis < -10:
+                print('tuning left ... ')
+                self.rovio.rotate_left_lag(tm=self.delay_time * turn_degree / 36, speed=0.2, angle=act_turn_degree)
+        else:
+            print('angle < 10 no need to tune ...')
+
+        self.rovio.stop()
+        self.get_frame()
+        rpr = self.get_refer_point(obj)
+        print('new refer_point', rpr)
+        print('----------------------tune 2 face ended')
+
+    def find_blind_spot2(self, rovio_angle):
+        if 45 < rovio_angle < 135:
+            return 1
+        elif 225 < rovio_angle < 315:
+            return -1
+        else:
+            return 0
+
+    def loop3(self):
+        #STEP1: TURN TO FACE AN OBSTACLE
+        #IF OBSTALCE IS NOT IN ONE FRAME WITH ROVIO
+        #ELSE FIND ANOTHER OBSTACLE BY CONTINUE TURNING
+        self.get_frame()
+        if not (self.check_center(-1, -1, 'obstalce')):
+            for x in range(1, 11):
+                self.rovio.rotate_right(speed=4)
+                time.sleep(self.delay_time * 2)
+
+                self.get_frame()
+                if self.check_center(-1, -1, 'obstacle'):
+                    break
+
+        #STEP 2: MOVE TOWARDS OBSTACLE
+        self.move_forward(140, "obstacle")
+
+        #STEP 3: TURN TO FIND ROVIO
+        rovio_angle = self.turn2face_rovio2(-1)
+        if rovio_angle != -1:
+            self.tune2face2('rovio')
+
+
+        #STEP 4: CALCULATE BLIND SPOT
+        blind_spot = self.find_blind_spot2(rovio_angle)
+
+
+        #STEP 5: MOVE BACKWARD
+        self.move_backward(-1, 'rovio')
+
+        #STEP 6: HIDE AT BLIND SPOT
+        self.hide_behind(blind_spot)
+
+    def loop(self):
+        print("============Testing one step straight right ... ")
+        for y in range(11):
+
+            self.rovio.right(5)
+            self.rovio.right(5)
+            self.rovio.right(5)
+            self.rovio.right(5)
+            time.sleep(5)
+            self.rovio.stop()
+            print("one step right")
+            time.sleep(2)
+        print("============Testing 360 ... ")
+
+        time.sleep(10)
+        for x in range(1, 11):
+            self.rovio.rotate_right(speed=4)
+            time.sleep(self.delay_time * 2)
+            self.get_frame()
+        print("============Testing move forward step ... ")
+
+        time.sleep(10)
+        for y in range(11):
+            for x in range(1):
+                self.rovio.forward(4)  # rovio move forward one step
+            time.sleep(1)
