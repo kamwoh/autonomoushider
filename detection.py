@@ -262,7 +262,7 @@ class RovioDetection(object):
 class ObstacleDetection(object):
 
     def __init__(self, bound=20):
-        self.bound = bound
+        self.bound = 30
 
     def preprocess_image(self, frame):
         # 150,5,233

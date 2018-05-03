@@ -55,7 +55,6 @@ class HidingAlgorithm(object):
         #print('====================')
 
     def check_center(self, bounding_box_x1, bounding_box_x2, obj):
-        #return self.screen_width - bounding_box_x2 - self.center_bound < bounding_box_x1 < self.screen_width - bounding_box_x2 + self.center_bound
         if obj == 'rovio':
             return self.get_refer_point('rovio') != 'No Rovio Found'
         else:
@@ -137,12 +136,21 @@ class HidingAlgorithm(object):
 
     def forward_dis(self, refer_point):
         # return the distance from bottom center of screen to refer point of the object
-        print('refer_point_rovio:', refer_point)
+        print('refer_point:', refer_point)
+        if refer_point == 'No Obstacle Found':
+            raise TypeError('?????????????????????? Obstacle is lost!!')
+        elif refer_point == 'No Rovio Found':
+            raise TypeError('?????????????????????? Rovio is lost!!')
+
         return self.distance(refer_point[0], refer_point[1], self.center[0], self.screen_height-1)
 
     def screen_dis(self, refer_point):
         # return the distance from screen center line to refer_point of the object
-        print('center', self.center)
+        if refer_point == 'No Obstacle Found':
+            raise TypeError('?????????????????????? Obstacle is lost!!')
+        elif refer_point == 'No Rovio Found':
+            raise TypeError('?????????????????????? Rovio is lost!!')
+
         return refer_point[0] - self.center[0]
 
     def tune2face(self, forward_dis, screen_dis):
@@ -173,9 +181,6 @@ class HidingAlgorithm(object):
 
         self.rovio.stop()
         self.get_frame()
-        rpr = self.get_refer_point('rovio')
-
-        print('refer_point_rovio:', rpr)
 
         print ('----------------------tune 2 face ended')
 
@@ -208,7 +213,7 @@ class HidingAlgorithm(object):
             refer_point_seeker = self.get_refer_point('rovio')
 
         if no_adjust is False:
-            print('>>>>>>>>>>>>>>Lost vision of rovio')
+            print('>>>>>>>>>>>>>>Camera is hidden from seeker')
             print('>>>>>>> Hide the other half of the body by going 2 steps to the ')
             for y in range(2):
                 if move_str_direction == 1:
@@ -350,15 +355,13 @@ class HidingAlgorithm(object):
             forward_dis = self.forward_dis(refer_point)
 
         if moved is False:
-            backward_steps = 1
-
             self.get_frame()
             initial_refer_point = self.get_refer_point('obstacle')
             forward_dis = self.forward_dis(initial_refer_point)
             refer_point = initial_refer_point
             original_distance = forward_dis
             steps = 0
-            steps_limit = backward_steps
+            steps_limit = 1
 
             print('>>>>Original distance:', original_distance)
             print('>>>>forward distance =', forward_dis)
@@ -378,104 +381,113 @@ class HidingAlgorithm(object):
         self.move_forward(110, 'obstacle')
 
     def loop(self):
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
-        time_start = datetime.now().time()
-        print('TIME START: ', time_start)
-        print('---- STEP 1: TURN TO FACE AN OBSTACLE------ ')
-        #STEP1: TURN TO FACE AN OBSTACLE
-        #IF OBSTALCE IS NOT IN ONE FRAME WITH ROVIO
-        #ELSE FIND ANOTHER OBSTACLE BY CONTINUE TURNING
-        self.get_frame()
-        while not (self.check_center(-1, -1, 'obstacle')):
-            not_found = True
-            for x in range(1, 11):
-                self.rovio.rotate_right(speed=4)
-                time.sleep(self.delay_time * 2)
-
-                self.get_frame()
-                if self.check_center(-1, -1, 'obstacle'):
-                    print('>>>>>>> OBSTACLE FOUND!!!! <<<<<<<')
-                    not_found = False
-                    break
-
-            if not_found is True:
-                print('>>>>>>>>>>>>>> Moving to find obstacle <<<<<<<<<<<<')
-                for i in range(7):
-                    for y in range(5):
-                        self.rovio.forward(5)
-                    time.sleep(0.5)
-
-        time_step1 = datetime.now().time()
-        print('+++++++++ STEP 1 FINISHED +++++++++')            
-
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
-        print('---- STEP 2: MOVE TOWARDS OBSTACLE ----')
-        #STEP 2: MOVE TOWARDS OBSTACLE
-        self.move_forward(100, "obstacle")
-        time_step2 = datetime.now().time()
-        print('+++++++++ STEP 2 FINISHED +++++++++')
-
-        print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
         while True:
-            #STEP 3: TURN TO FIND ROVIO
-            print('---- STEP 3: TURN TO FIND ROVIO ----')
-            rovio_angle = -1
-            if rovio_angle == -1:
-                rovio_angle = self.turn2face_rovio2(-1)
+            try:
+                print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
-            if rovio_angle != -1:
-                self.tune2face2('rovio')
-            time_step3 = datetime.now().time()
-            print('+++++++++ STEP 3 FINISHED +++++++++')
+                time_start = datetime.now().time()
+                print('TIME START: ', time_start)
+                print('---- STEP 1: TURN TO FACE AN OBSTACLE------ ')
+                #STEP1: TURN TO FACE AN OBSTACLE
+                #IF OBSTALCE IS NOT IN ONE FRAME WITH ROVIO
+                #ELSE FIND ANOTHER OBSTACLE BY CONTINUE TURNING
+                self.get_frame()
+                while not (self.check_center(-1, -1, 'obstacle')):
+                    not_found = True
+                    for x in range(1, 11):
+                        self.rovio.rotate_right(speed=4)
+                        time.sleep(self.delay_time * 2)
 
-            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                        self.get_frame()
+                        if self.check_center(-1, -1, 'obstacle'):
+                            print('>>>>>>> OBSTACLE FOUND!!!! <<<<<<<')
+                            not_found = False
+                            break
+
+                    if not_found is True:
+                        print('>>>>>>>>>>>>>> Moving to find obstacle <<<<<<<<<<<<')
+                        for i in range(7):
+                            for y in range(5):
+                                self.rovio.forward(5)
+                            time.sleep(0.5)
+
+                time_step1 = datetime.now().time()
+                print('+++++++++ STEP 1 FINISHED +++++++++')            
+
+                print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
+                print('---- STEP 2: MOVE TOWARDS OBSTACLE ----')
+                #STEP 2: MOVE TOWARDS OBSTACLE
+                self.move_forward(100, "obstacle")
+                time_step2 = datetime.now().time()
+                print('+++++++++ STEP 2 FINISHED +++++++++')
+
+                print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
+                while True:
+                    #STEP 3: TURN TO FIND ROVIO
+                    print('---- STEP 3: TURN TO FIND ROVIO ----')
+                    rovio_angle = -1
+                    if rovio_angle == -1:
+                        rovio_angle = self.turn2face_rovio2(-1)
+
+                    if rovio_angle != -1:
+                        self.tune2face2('rovio')
+                    time_step3 = datetime.now().time()
+                    print('+++++++++ STEP 3 FINISHED +++++++++')
+
+                    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
 
-            print('---- STEP 4: CALCULATE BLIND SPOT ----')
-            #STEP 4: CALCULATE BLIND SPOT
-            print('==== ROVIO Angle:', rovio_angle)
-            blind_spot = self.find_blind_spot2(rovio_angle)
-            print('==== BLIND SPOT:', blind_spot)
-            time_step4 = datetime.now().time()
-            print('+++++++++ STEP 4 FINISHED +++++++++')
+                    print('---- STEP 4: CALCULATE BLIND SPOT ----')
+                    #STEP 4: CALCULATE BLIND SPOT
+                    print('==== ROVIO Angle:', rovio_angle)
+                    blind_spot = self.find_blind_spot2(rovio_angle)
+                    print('==== BLIND SPOT:', blind_spot)
+                    time_step4 = datetime.now().time()
+                    print('+++++++++ STEP 4 FINISHED +++++++++')
 
-            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
-
-            print('---- STEP 5: MOVE BACKWARD FROM ROVIO ----')
-            #STEP 5: MOVE BACKWARD
-            backward_steps, blind_spot = self.adjust_for_180(blind_spot, rovio_angle)
-            print('==== backward steps:', backward_steps)
-            self.move_backward(backward_steps, 'rovio')
-            time_step5 = datetime.now().time()
-            print('+++++++++ STEP 5 FINISHED +++++++++')
-
-            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
 
-            print('---- STEP 6: HIDE AT BLIND SPOT ----')
-            #STEP 6: HIDE AT BLIND SPOT
-            self.hide_behind(blind_spot)
-            self.adjust_hiding(100)
-            self.rovio.stop()
-            time_step6 = datetime.now().time()
-            print('+++++++++ STEP 6 FINISHED +++++++++')
+                    print('---- STEP 5: MOVE BACKWARD FROM ROVIO ----')
+                    #STEP 5: MOVE BACKWARD
+                    backward_steps, blind_spot = self.adjust_for_180(blind_spot, rovio_angle)
+                    print('==== backward steps:', backward_steps)
+                    self.move_backward(backward_steps, 'rovio')
+                    time_step5 = datetime.now().time()
+                    print('+++++++++ STEP 5 FINISHED +++++++++')
 
-            print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+                    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
-            for x in range(5):
-                print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Pausing left: ', 5-x)
+
+                    print('---- STEP 6: HIDE AT BLIND SPOT ----')
+                    #STEP 6: HIDE AT BLIND SPOT
+                    self.hide_behind(blind_spot)
+
+                    self.adjust_hiding(100)
+                    self.rovio.stop()
+                    time_step6 = datetime.now().time()
+                    print('+++++++++ STEP 6 FINISHED +++++++++')
+
+                    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+
+                    for x in range(3):
+                        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Pausing left: ', 3-x)
+                        time.sleep(1)
+
+            except TypeError:
+                print('??????????????????????????????????????? Opps target lost ...\n')
+                print('??????????????????????????????????????? Rerun the whole process again ...\n')
+                self.rovio.stop()
                 time.sleep(1)
-
-        # time_end = datetime.now().time()
-        # print('TIME END:', time_end)
-        # print('TOTAL TIME FOR HIDING:', datetime.combine(date.min, time_end) - datetime.combine(date.min, time_start))
-        # print('Time_step1 (find ob):', datetime.combine(date.min, time_step1) - datetime.combine(date.min, time_start))
-        # print('Time_step2 (move2ob):', datetime.combine(date.min, time_step2) - datetime.combine(date.min, time_step1))
-        # print('Time_step3 (find r):', datetime.combine(date.min, time_step3) - datetime.combine(date.min, time_step2))
-        # print('Time_step4 (cal bs):', datetime.combine(date.min, time_step4) - datetime.combine(date.min, time_step3))
-        # print('Time_step5 (backFromR):', datetime.combine(date.min, time_step5) - datetime.combine(date.min, time_step4))
-        # print('Time_step6 (hideBehind):', datetime.combine(date.min, time_step6) - datetime.combine(date.min, time_step5))
+                continue
+            # time_end = datetime.now().time()
+            # print('TIME END:', time_end)
+            # print('TOTAL TIME FOR HIDING:', datetime.combine(date.min, time_end) - datetime.combine(date.min, time_start))
+            # print('Time_step1 (find ob):', datetime.combine(date.min, time_step1) - datetime.combine(date.min, time_start))
+            # print('Time_step2 (move2ob):', datetime.combine(date.min, time_step2) - datetime.combine(date.min, time_step1))
+            # print('Time_step3 (find r):', datetime.combine(date.min, time_step3) - datetime.combine(date.min, time_step2))
+            # print('Time_step4 (cal bs):', datetime.combine(date.min, time_step4) - datetime.combine(date.min, time_step3))
+            # print('Time_step5 (backFromR):', datetime.combine(date.min, time_step5) - datetime.combine(date.min, time_step4))
+            # print('Time_step6 (hideBehind):', datetime.combine(date.min, time_step6) - datetime.combine(date.min, time_step5))
