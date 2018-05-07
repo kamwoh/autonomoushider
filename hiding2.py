@@ -45,9 +45,11 @@ class HidingAlgorithm(object):
         self.rovio_point = self.rovio_detection.get_refer_point(self.frame)
         self.obstacle_points = self.obstacle_detection.get_refer_point(self.frame)
         if self.frame is not None:
-            cv2.imshow('obstacle', self.frame)
+            cv2.imshow('obstacle', cv2.resize(self.frame, (480,360)))
+            cv2.moveWindow('obstacle', 50+10+480, 100)
         if self.rovio_detection.disp_img is not None:
-            cv2.imshow('rovio', self.rovio_detection.disp_img)
+            cv2.imshow('rovio', cv2.resize(self.rovio_detection.disp_img, (480,360)))
+            cv2.moveWindow('rovio', 50+(10+480)*2, 100)
         cv2.waitKey(1)
 
         #print('rovio_point:', self.rovio_point)
@@ -89,7 +91,7 @@ class HidingAlgorithm(object):
         forward_dis = self.forward_dis(initial_refer_point) #ASSUMING THAT OBJECT WILL NOT GO OUT OF SCREEN 
         refer_point = initial_refer_point
 
-        while forward_dis > nearest_distance:  # EXPERIMENT WITH THE NEAREST DISTANCE
+        while forward_dis >= nearest_distance:  # EXPERIMENT WITH THE NEAREST DISTANCE
             screen_dis = self.screen_dis(refer_point)
             print('>>>>forward distance =', forward_dis)
             print('>>>>forward distance - nearest distance =', forward_dis - nearest_distance)
@@ -97,11 +99,16 @@ class HidingAlgorithm(object):
             self.rovio.stop()
             time.sleep(0.1)
             for x in range(3):
-                self.rovio.forward(1)  # rovio move forward one step
-                time.sleep(0.1)
-            time.sleep(0.5)
+                self.rovio.forward(2)  # rovio move forward one step
+                #self.get_frame()
+                # refer_point = self.get_refer_point(obj)
+                # forward_dis = self.forward_dis(refer_point)
+                # if forward_dis >= nearest_distance:
+                #     break
+                #time.sleep(0.3)
+            time.sleep(0.3)
             self.get_frame()
-            refer_point = self.get_refer_point(obj)  # EXPERIMENT UPDATE REFER POINT WHILE MOVING
+            refer_point = self.get_refer_point(obj)
             forward_dis = self.forward_dis(refer_point)
 
     def move_backward(self, backward_steps, obj):
@@ -229,6 +236,13 @@ class HidingAlgorithm(object):
                         time.sleep(0.25)
                     self.rovio.rotate_left_lag(0.5, 4, 20)
 
+                self.get_frame()
+                refer_point_seeker = self.get_refer_point('rovio')
+                if refer_point_seeker != 'No Rovio Found':
+                    self.hide_behind(move_str_direction)
+                    break
+
+
     def turn2face_rovio2(self, turn_dir):
         # ASSUMING THERE IS ONLY ONE ROVIO
         rovio_angle = -1
@@ -291,14 +305,14 @@ class HidingAlgorithm(object):
     def adjust_for_180(self, blind_spot, rovio_angle):
         if blind_spot == 1:
             if rovio_angle/36 > 1:
-                backward_steps = 2
+                backward_steps = 3
             else:
                 backward_steps = 1
         elif blind_spot == -1:
             if rovio_angle/36 < 9:
-                backward_steps = 2
+                backward_steps = 3
             else:
-                backward_steps = 1
+                backward_steps = 2
         elif blind_spot == 0:
             backward_steps = 0
         else:
@@ -306,7 +320,7 @@ class HidingAlgorithm(object):
 
         if blind_spot == 2:
             print('Blind spot = 2, adjusting_for_180')
-            for y in range(3):
+            for y in range(2):
                 if rovio_angle == 180 or rovio_angle == 216:
                     for x in range(3):
                         print('>>>>>>>>>>>>>right')
@@ -476,9 +490,12 @@ class HidingAlgorithm(object):
                         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Pausing left: ', 3-x)
                         time.sleep(1)
 
-            except TypeError:
+            except TypeError as e:
                 print('??????????????????????????????????????? Opps target lost ...\n')
                 print('??????????????????????????????????????? Rerun the whole process again ...\n')
+                #import traceback
+                #traceback.print_exc()
+                print(e)
                 self.rovio.stop()
                 time.sleep(1)
                 continue

@@ -28,9 +28,11 @@ class IPCamera(object):
                     jpg = _bytes[a:b + 2]
                     _bytes = _bytes[b + 2:]
                     i = cv2.imdecode(np.fromstring(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-                    self.current_frame = i
+                    self.current_frame = cv2.resize(i, (640, 480))
                     if self.debug:
-                        cv2.imshow('debug', self.current_frame)
+                        i = cv2.resize(i, (480,360))
+                        cv2.imshow('debug', i)
+                        cv2.moveWindow('debug', 50, 100)
                         cv2.waitKey(1)
             except Exception as e:
                 print ('gg error: ' + str(e))
