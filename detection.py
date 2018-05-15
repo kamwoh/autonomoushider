@@ -179,7 +179,7 @@ class RovioDetection(object):
         self.cscreeny = self.screen_height / 2
 
     def _get_rovio_bbox(self, frame):
-        self.boxes, self.disp_img = predict(self.model, frame, self.classes, 0.5)
+        self.boxes, self.disp_img = predict(self.model, frame, self.classes, 0.7)
         return self.boxes
 
     def get_rovio_bbox(self, frame):

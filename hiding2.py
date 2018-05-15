@@ -490,6 +490,16 @@ class HidingAlgorithm(object):
                         print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Pausing left: ', 3-x)
                         time.sleep(1)
 
+                    while True:
+                        try:
+                            print('>>>>>>>>>>>>>>>>>>Waiting for input<<<<<<<<<<<<<<<<<<<<<<')
+                            a = input()
+                            if a == 'h':
+                                break
+                        except KeyboardInterrupt:
+                            exit()
+                        except Exception as e:
+                            print('Unknown error while waiting for input: ', e)
             except TypeError as e:
                 print('??????????????????????????????????????? Opps target lost ...\n')
                 print('??????????????????????????????????????? Rerun the whole process again ...\n')
